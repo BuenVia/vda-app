@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Client List{% endblock %}
+
+{% block content %}
+    <h2>Client List</h2>
+    {% if clients %}
+        <ul>
+            {% for client in clients %}
+                <li><a href="{% url 'client_detail' client.id %}">{{ client.company_name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No clients have been created yet.</p>
+    {% endif %}
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}

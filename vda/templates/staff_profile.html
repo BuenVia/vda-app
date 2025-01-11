@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Profile{% endblock %}
+
+{% block content %}
+    <h2>Staff Profile</h2>
+    <p><strong>First Name:</strong> {{ staff.first_name }}</p>
+    <p><strong>Last Name:</strong> {{ staff.last_name }}</p>
+    <p><strong>Client:</strong> {{ staff.client.company_name }}</p>
+
+    <h3>Jobs</h3>
+    <ul>
+        {% for job in staff.jobs.all %}
+            <li>{{ job.get_role_display }} 
+                (<a href="{% url 'edit_or_delete_job' job.id %}">Edit/Delete</a>)
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_job' staff.id %}">Add Job</a>
+
+
+    <h3>Qualifications</h3>
+    {% if staff.jobs.exists %}
+        <ul>
+            {% for job in staff.jobs.all %}
+                {% for qualification in job.qualifications.all %}
+                    <li>
+                        {{ qualification.name }} ({{ job.get_role_display }}) -
+                        <a href="{% url 'edit_or_delete_qualification' qualification.id %}">Edit/Delete</a>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No qualifications available for this staff member.</p>
+    {% endif %}
+    <a href="{% url 'create_qualification' staff.id %}">Add Qualification</a>
+    
+
+    
+
+    <a href="{% url 'edit_or_delete_staff' staff.id %}">Edit/Delete Staff Member</a>
+    <a href="{% url 'client_detail' staff.client.id %}">Back to {{ staff.client.company_name }} Details</a>
+
+
+
+    {% endblock %}

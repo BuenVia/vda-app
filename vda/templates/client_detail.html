@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ client.company_name }}{% endblock %}
+
+{% block content %}
+    <h2>{{ client.company_name }}</h2>
+    <h3>Associated Users</h3>
+    {% if users %}
+        <ul>
+            {% for user in users %}
+                <li>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users are associated with this client.</p>
+    {% endif %}
+
+    <h3>Staff Members</h3>
+    {% if staff_members %}
+        <ul>
+            {% for staff in staff_members %}
+                <li>
+                    <a href="{% url 'staff_profile' staff.id %}">{{ staff.first_name }} {{ staff.last_name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No staff members are associated with this client.</p>
+    {% endif %}
+    <a href="{% url 'create_staff' client.id %}">Add Staff Member</a>
+    <a href="{% url 'client_list' %}">Back to Client List</a>
+{% endblock %}

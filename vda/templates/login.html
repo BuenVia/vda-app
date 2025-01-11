@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %} ">
+    <title>Client</title>
+</head>
+<body>
+    
+    <div class="container">
+
+        <div class="client__login__card">
+
+            <div class="client__login__card__top">
+                <h1>ARC Support Services</h1>
+            </div>
+
+            <div class="client__login__card__mid">
+                <p class="dateEl" id="fullDate"></p>
+                <form method="POST" class="client__login__form">
+                    {% csrf_token %}
+                    <!-- <label for="username">Username:</label> -->
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                    
+                    <!-- <label for="password">Password:</label> -->
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    
+                    {% if messages %}
+                    
+                    <ul>
+                        {% for message in messages %}
+                        <li class="client__login__message">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    {% endif %}
+                    
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            
+            <div class="client__login__card__btm">
+                &#169; <span id="date"></span> ARC Support Services | All rights reserved
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        
+        const date = new Date();
+        const day = date.getDay();
+        const dayDate = date.getDate()
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        
+        document.getElementById("fullDate").innerText = `${days[day]} ${dayDate} ${months[month]} ${year} ${hours}:${minutes}`;
+        document.getElementById("date").innerText = year;
+    </script>
+
+</body>
+</html>
