@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .enums import JobRole
+from .enums import JobRole, DocumentCategory
 
 class Client(models.Model):
     company_name = models.CharField(max_length=255, unique=True)
@@ -44,3 +44,50 @@ class Qualification(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.job.role}) - {self.job.staff.first_name} {self.job.staff.last_name}"
+
+
+class ToolEquipment(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='tools_equipment')
+    make = models.CharField(max_length=255)
+    model = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.make} {self.model} ({self.client.company_name})"
+
+
+class CalibrationTest(models.Model):
+    equipment = models.ForeignKey(ToolEquipment, on_delete=models.CASCADE, related_name='tests')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='tests')
+    test_name = models.CharField(max_length=255)
+    test_completion_date = models.DateField()
+    test_renewal_date = models.DateField()
+    test_score = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.test_name} ({self.equipment.make} {self.equipment.model})"
+
+
+class Document(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='documents')
+    category = models.CharField(
+        max_length=50,
+        choices=[(category.name, category.value) for category in DocumentCategory],
+        unique=True
+    )
+    file = models.FileField(upload_to='uploads/documents/', blank=True, null=True)
+    upload_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_category_display()} - {self.client.company_name}"
+
+    def save(self, *args, **kwargs):
+        if self.file:
+            # Rename the file
+            import os
+            from django.utils.text import slugify
+            client_name = slugify(self.client.company_name)
+            category_name = slugify(self.get_category_display())
+            extension = os.path.splitext(self.file.name)[1]
+            self.file.name = f"{category_name}_{client_name}_{self.client.id}{extension}"
+        super().save(*args, **kwargs)

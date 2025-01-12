@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Calibration Test{% endblock %}
+
+{% block content %}
+    <h2>Add Calibration Test for {{ equipment.make }} {{ equipment.model }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Calibration Test</button>
+    </form>
+    <a href="{% url 'equipment_detail' equipment.id %}">Back to Equipment Details</a>
+{% endblock %}

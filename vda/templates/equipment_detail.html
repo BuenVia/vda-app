@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Equipment Details{% endblock %}
+
+{% block content %}
+    <h2>Equipment Details</h2>
+    <p><strong>Make:</strong> {{ equipment.make }}</p>
+    <p><strong>Model:</strong> {{ equipment.model }}</p>
+    <p><strong>Description:</strong> {{ equipment.description }}</p>
+    <p><strong>Client:</strong> {{ equipment.client.company_name }}</p>
+    <a href="{% url 'edit_or_delete_equipment' equipment.id %}">Edit/Delete Equipment</a>
+    <a href="{% url 'client_detail' equipment.client.id %}">Back to Client Details</a>
+
+    <h3>Tests</h3>
+    {% if equipment.tests.exists %}
+        <ul>
+            {% for test in equipment.tests.all %}
+                <li>
+                    <strong>{{ test.test_name }}</strong> (Completed: {{ test.test_completion_date }}, Renewal: {{ test.test_renewal_date }})
+                    {% if test.test_score %}
+                        - Score: {{ test.test_score }}
+                    {% endif %}
+                    <a href="{% url 'edit_or_delete_calibration_test' test.id %}">Edit/Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tests have been added for this equipment.</p>
+    {% endif %}
+    <a href="{% url 'create_calibration_test' equipment.id %}">Add Calibration Test</a>
+    <a href="{% url 'client_detail' equipment.client.id %}">Back to Client Details</a>
+    
+
+    
+{% endblock %}

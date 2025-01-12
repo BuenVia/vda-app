@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Tool/Equipment{% endblock %}
+
+{% block content %}
+    <h2>Add Tool/Equipment for {{ client.company_name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Tool/Equipment</button>
+    </form>
+    <a href="{% url 'client_detail' client.id %}">Back to Client Details</a>
+{% endblock %}

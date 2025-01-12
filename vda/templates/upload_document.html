@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Document{% endblock %}
+
+{% block content %}
+    <h2>Upload Document: {{ category|capfirst }} for {{ client.company_name }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload Document</button>
+    </form>
+    <a href="{% url 'document_list' client.id %}">Back to Documents</a>
+{% endblock %}

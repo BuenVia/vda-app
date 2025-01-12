@@ -18,6 +18,21 @@ urlpatterns = [
     path('job/<int:job_id>/edit/', views.edit_or_delete_job, name='edit_or_delete_job'),
     path('staff/<int:staff_id>/add-qualification/', views.create_qualification, name='create_qualification'),
     path('qualification/<int:qualification_id>/edit/', views.edit_or_delete_qualification, name='edit_or_delete_qualification'),
-
+    path('client/<int:client_id>/add-tool-equipment/', views.create_tool_equipment, name='create_tool_equipment'),
+    path('equipment/<int:equipment_id>/', views.equipment_detail, name='equipment_detail'),
+    path('equipment/<int:equipment_id>/edit/', views.edit_or_delete_equipment, name='edit_or_delete_equipment'),
+    path('equipment/<int:equipment_id>/add-test/', views.create_calibration_test, name='create_calibration_test'),
+    path('test/<int:test_id>/edit/', views.edit_or_delete_calibration_test, name='edit_or_delete_calibration_test'),
+    path('client/<int:client_id>/documents/', views.document_list, name='document_list'),
+    path('client/<int:client_id>/upload/<str:category>/', views.upload_document, name='upload_document'),
+    path('update-user/', views.update_user, name='update_user'),
+    path('admin/users/', views.user_list, name='user_list'),
+    path('admin/users/<int:user_id>/edit/', views.edit_or_delete_user, name='edit_or_delete_user'),
 
 ]
+
+# from django.conf.urls import handler404, handler403
+# from .views import custom_permission_denied_view
+
+# handler404 = 'django.views.defaults.page_not_found'
+# handler403 = 'myapp.views.custom_permission_denied_view'

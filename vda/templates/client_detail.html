@@ -27,6 +27,43 @@
     {% else %}
         <p>No staff members are associated with this client.</p>
     {% endif %}
+
     <a href="{% url 'create_staff' client.id %}">Add Staff Member</a>
+
+    <h3>Tools and Equipment</h3>
+    <ul>
+        {% for tool in client.tools_equipment.all %}
+            <li>
+                <a href="{% url 'equipment_detail' tool.id %}">{{ tool.make }} {{ tool.model }}</a>: {{ tool.description }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_tool_equipment' client.id %}">Add Tool/Equipment</a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Document</th>
+                <th>Status</th>
+                <th>Upload Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category, document in document_status.items %}
+                <tr>
+                    <td>{{ category|capfirst }}</td>
+                    {% if document %}
+                        <td>Uploaded</td>
+                        <td>{{ document.upload_date }}</td>
+                    {% else %}
+                        <td><a href="{% url 'upload_document' client.id category %}">Upload</a></td>
+                        <td>-</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'document_list' client.id %}">View All Documents</a>
+
     <a href="{% url 'client_list' %}">Back to Client List</a>
 {% endblock %}
