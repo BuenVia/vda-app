@@ -21,7 +21,13 @@
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.client.company_name if user.client else "N/A" }}</td>
+                        <td>
+                            {% if user.client %}
+                                {{ user.client.company_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{% url 'edit_or_delete_user' user.id %}" class="btn btn-primary btn-sm">Edit/Delete</a>
                         </td>

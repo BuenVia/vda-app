@@ -11,40 +11,49 @@
 
     <div class="row mt-4">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-dark mb-3">
                 <div class="card-header">Staff</div>
                 <div class="card-body">
                     <h5 class="card-title">{{ staff_count }}</h5>
                     <p class="card-text">Number of staff associated with your client.</p>
                 </div>
+                <div class="card-footer">
+                    <a href="{% url 'client_detail' client.id %}" class="btn btn-warning">
+                        View Staff
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-dark mb-3">
                 <div class="card-header">Equipment</div>
                 <div class="card-body">
                     <h5 class="card-title">{{ equipment_count }}</h5>
                     <p class="card-text">Number of equipment items associated with your client.</p>
                 </div>
+                <div class="card-footer">
+                    <a href="{% url 'client_detail' client.id %}" class="btn btn-warning">
+                        View Equipment
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
+            <div class="card text-white bg-dark mb-3">
                 <div class="card-header">Documents</div>
                 <div class="card-body">
                     <h5 class="card-title">{{ document_count }}</h5>
                     <p class="card-text">Number of documents uploaded for your client.</p>
                 </div>
+                <div class="card-footer">
+                    <a href="{% url 'client_detail' client.id %}" class="btn btn-warning">
+                        View Documents
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Link to Client Details Page -->
-    <div class="mt-4">
-        <a href="{% url 'client_detail' client.id %}" class="btn btn-primary">
-            View Client Details
-        </a>
-    </div>
 </div>
 
 {% endblock %}

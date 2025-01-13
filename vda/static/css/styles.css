@@ -9,3 +9,6 @@ body {
     color: #eee !important;
 }
 
+.card-header {
+    font-weight: bold;
+}

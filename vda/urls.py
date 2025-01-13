@@ -26,9 +26,8 @@ urlpatterns = [
     path('client/<int:client_id>/documents/', views.document_list, name='document_list'),
     path('client/<int:client_id>/upload/<str:category>/', views.upload_document, name='upload_document'),
     path('update-user/', views.update_user, name='update_user'),
-    path('admin/users/', views.user_list, name='user_list'),
-    path('admin/users/<int:user_id>/edit/', views.edit_or_delete_user, name='edit_or_delete_user'),
-
+    path('users/', views.user_list, name='user_list'),
+    path('users/<int:user_id>/edit/', views.edit_or_delete_user, name='edit_or_delete_user'),
 ]
 
 # from django.conf.urls import handler404, handler403
