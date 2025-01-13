@@ -4,11 +4,38 @@
 
 {% block content %}
 
-    <h2>Welcome to the Dashboard</h2>
+<div class="container mt-5">
 
-    <ul class="list-group mt-4">
-        <li class="list-group-item">
-            <a href="{% url 'user_list' %}" class="btn btn-primary">Manage Users</a>
-        </li>
-    <a href="{% url 'logout' %}">Logout</a>
+    <!-- Centered Title -->
+    <h2 class="text-center text-white">Welcome to the Dashboard</h2>
+
+    <div class="row justify-content-center mt-4">
+        <!-- Card for Clients and Staff -->
+        <div class="col-md-6">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning text-center">
+                    System Overview
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Clients:</strong> {{ total_clients }}</p>
+                    <p><strong>Staff Per Client:</strong></p>
+                    <ul class="list-unstyled">
+                        {% for client in clients %}
+                            <li>{{ client.company_name }}: {{ client.staff_count }} staff</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Users Section -->
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <a href="{% url 'user_list' %}" class="btn btn-primary btn-block">Manage Users</a>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}

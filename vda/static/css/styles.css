@@ -7,8 +7,24 @@
 body {
     background-color: #222 !important;
     color: #eee !important;
+    min-height: 100vh;
+}
+
+.navbar-brand {
+    color: yellow !important;
+    font-weight: 900;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .1), 0 6px 20px rgba(0, 0, 0, .1)
 }
 
 .card-header {
     font-weight: bold;
+}
+
+.footer {
+    padding: 1em;
+    text-align: center;
+    color: yellow;
 }

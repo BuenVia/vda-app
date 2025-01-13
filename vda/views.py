@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 from .forms import ClientForm, UserForm, StaffForm, JobForm, QualificationForm, ToolEquipmentForm, CalibrationTestForm, DocumentUploadForm, UserUpdateForm
 from .models import Client, Staff, Job, Qualification, ToolEquipment, CalibrationTest, Document, User
 from .enums import DocumentCategory
@@ -31,7 +32,17 @@ def user_login(request):
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
-        return render(request, 'admin_dashboard.html')  # Admin dashboard remains the same
+        clients = Client.objects.annotate(staff_count=Count('staff'))
+        total_clients = clients.count()
+
+        return render(
+            request,
+            'admin_dashboard.html',
+            {
+                'total_clients': total_clients,
+                'clients': clients,
+            }
+        )
 
     # Standard user dashboard
     client = request.user.client  # Assuming `client` is a ForeignKey on the User model
@@ -106,11 +117,12 @@ def create_user(request):
 def client_detail(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     users = client.user_set.all()  # Retrieve associated users
-    staff_members = client.staff.all()  # Retrieve associated staff
+    jobs = client.jobs.all().select_related('staff')  # Retrieve associated jobs with staff
+    staff_members = {job.staff for job in jobs}  # Get unique staff members from jobs
     tools_equipment = client.tools_equipment.all()  # Retrieve tools and equipment
     documents = Document.objects.filter(client=client)
     document_status = {category.name: None for category in DocumentCategory}
-    
+
     for doc in documents:
         document_status[doc.category] = doc
 
@@ -125,6 +137,7 @@ def client_detail(request, client_id):
             'document_status': document_status,
         }
     )
+
 
 
 @user_passes_test(is_admin)
@@ -171,7 +184,7 @@ def edit_or_delete_staff(request, staff_id):
 
 
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def create_job(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
     client = staff.client  # Derive the client from the staff member
@@ -213,7 +226,7 @@ def edit_or_delete_job(request, job_id):
     return render(request, 'edit_or_delete_job.html', {'form': form, 'job': job, 'staff': staff})
 
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def create_qualification(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
     jobs = staff.jobs.all()  # Get jobs associated with this staff member
@@ -233,7 +246,7 @@ def create_qualification(request, staff_id):
     return render(request, 'create_qualification.html', {'form': form, 'staff': staff})
 
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def edit_or_delete_qualification(request, qualification_id):
     qualification = get_object_or_404(Qualification, id=qualification_id)
     staff = qualification.job.staff
@@ -256,6 +269,22 @@ def edit_or_delete_qualification(request, qualification_id):
     return render(request, 'edit_or_delete_qualification.html', {'form': form, 'qualification': qualification, 'staff': staff})
 
 
+
+def competency(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    qualifications = Qualification.objects.filter(job__staff__client=client).select_related('job', 'job__staff')
+
+    return render(
+        request,
+        'competency.html',
+        {
+            'client': client,
+            'qualifications': qualifications,
+        }
+    )
+
+
+
 @user_passes_test(is_admin)
 def create_tool_equipment(request, client_id):
     client = get_object_or_404(Client, id=client_id)
@@ -274,7 +303,7 @@ def create_tool_equipment(request, client_id):
 
     return render(request, 'create_tool_equipment.html', {'form': form, 'client': client})
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def equipment_detail(request, equipment_id):
     equipment = get_object_or_404(ToolEquipment, id=equipment_id)
     return render(request, 'equipment_detail.html', {'equipment': equipment})
@@ -342,7 +371,7 @@ def edit_or_delete_calibration_test(request, test_id):
     return render(request, 'edit_or_delete_calibration_test.html', {'form': form, 'test': test, 'equipment': equipment})
 
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def document_list(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     documents = Document.objects.filter(client=client)
@@ -353,7 +382,7 @@ def document_list(request, client_id):
     
     return render(request, 'document_list.html', {'client': client, 'document_status': document_status})
 
-@user_passes_test(is_admin)
+# @user_passes_test(is_admin)
 def upload_document(request, client_id, category):
     client = get_object_or_404(Client, id=client_id)
     document, created = Document.objects.get_or_create(client=client, category=category)
@@ -365,13 +394,25 @@ def upload_document(request, client_id, category):
             document.upload_date = timezone.now()
             document.save()
             messages.success(request, f"Document '{document.get_category_display()}' uploaded successfully!")
-            return redirect('document_list', client_id=client.id)
+            return redirect('client_detail', client_id=client.id)
         else:
             messages.error(request, "Error uploading document. Please try again.")
     else:
         form = DocumentUploadForm(instance=document)
 
     return render(request, 'upload_document.html', {'form': form, 'client': client, 'category': category})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
+# @user_passes_test(lambda u: u.is_superuser)
+def delete_document(request, document_id):
+    document = get_object_or_404(Document, id=document_id)
+    client_id = document.client.id  # Save client ID for redirecting
+    document.delete()  # Delete the document
+    messages.success(request, "Document deleted successfully!")
+    return redirect('client_detail', client_id=client_id)
 
 
 @login_required

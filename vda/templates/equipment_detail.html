@@ -3,32 +3,84 @@
 {% block title %}Equipment Details{% endblock %}
 
 {% block content %}
-    <h2>Equipment Details</h2>
-    <p><strong>Make:</strong> {{ equipment.make }}</p>
-    <p><strong>Model:</strong> {{ equipment.model }}</p>
-    <p><strong>Description:</strong> {{ equipment.description }}</p>
-    <p><strong>Client:</strong> {{ equipment.client.company_name }}</p>
-    <a href="{% url 'edit_or_delete_equipment' equipment.id %}">Edit/Delete Equipment</a>
-    <a href="{% url 'client_detail' equipment.client.id %}">Back to Client Details</a>
+<div class="container mt-5">
 
-    <h3>Tests</h3>
-    {% if equipment.tests.exists %}
-        <ul>
-            {% for test in equipment.tests.all %}
-                <li>
-                    <strong>{{ test.test_name }}</strong> (Completed: {{ test.test_completion_date }}, Renewal: {{ test.test_renewal_date }})
-                    {% if test.test_score %}
-                        - Score: {{ test.test_score }}
+    <!-- Page Heading -->
+    <h2 class="text-white">Equipment Details</h2>
+
+    <div class="row">
+        <!-- Equipment Details Card -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning">
+                    Equipment Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Make:</strong> {{ equipment.make }}</p>
+                    <p><strong>Model:</strong> {{ equipment.model }}</p>
+                    <p><strong>Description:</strong> {{ equipment.description }}</p>
+                    <p><strong>Client:</strong> {{ equipment.client.company_name }}</p>
+                </div>
+                <div class="card-footer">
+                    {% if user.is_superuser %}
+                    <a href="{% url 'edit_or_delete_equipment' equipment.id %}" class="btn btn-warning btn-sm">Edit/Delete Equipment</a>
                     {% endif %}
-                    <a href="{% url 'edit_or_delete_calibration_test' test.id %}">Edit/Delete</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tests have been added for this equipment.</p>
-    {% endif %}
-    <a href="{% url 'create_calibration_test' equipment.id %}">Add Calibration Test</a>
-    <a href="{% url 'client_detail' equipment.client.id %}">Back to Client Details</a>
+                    <a href="{% url 'client_detail' equipment.client.id %}" class="btn btn-secondary btn-sm">Back to Client Details</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tests Card -->
+        <div class="col-md-8">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning">
+                    Tests
+                </div>
+                <div class="card-body">
+                    {% if equipment.tests.exists %}
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Test Name</th>
+                                    <th>Completion Date</th>
+                                    <th>Renewal Date</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for test in equipment.tests.all %}
+                                    <tr>
+                                        <td>{{ test.test_name }}</td>
+                                        <td>{{ test.test_completion_date }}</td>
+                                        <td>{{ test.test_renewal_date }}</td>
+                                        <td>{{ test.test_score|default:"N/A" }}</td>
+                                        <td>
+                                            {% if user.is_superuser %}
+                                            <a href="{% url 'edit_or_delete_calibration_test' test.id %}" class="btn btn-warning btn-sm">
+                                                Edit/Delete
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No tests have been added for this equipment.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    {% if user.is_superuser %}
+                    <a href="{% url 'create_calibration_test' equipment.id %}" class="btn btn-primary btn-sm">Add Calibration Test</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
     
 
     

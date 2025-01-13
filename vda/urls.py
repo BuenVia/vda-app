@@ -28,6 +28,8 @@ urlpatterns = [
     path('update-user/', views.update_user, name='update_user'),
     path('users/', views.user_list, name='user_list'),
     path('users/<int:user_id>/edit/', views.edit_or_delete_user, name='edit_or_delete_user'),
+    path('document/<int:document_id>/delete/', views.delete_document, name='delete_document'),
+    path('client/<int:client_id>/competency/', views.competency, name='competency'),
 ]
 
 # from django.conf.urls import handler404, handler403

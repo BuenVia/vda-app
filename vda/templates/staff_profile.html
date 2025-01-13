@@ -3,44 +3,101 @@
 {% block title %}Staff Profile{% endblock %}
 
 {% block content %}
-    <h2>Staff Profile</h2>
-    <p><strong>First Name:</strong> {{ staff.first_name }}</p>
-    <p><strong>Last Name:</strong> {{ staff.last_name }}</p>
-    <p><strong>Client:</strong> {{ staff.client.company_name }}</p>
+<div class="container mt-5">
 
-    <h3>Jobs</h3>
-    <ul>
-        {% for job in staff.jobs.all %}
-            <li>{{ job.get_role_display }} 
-                (<a href="{% url 'edit_or_delete_job' job.id %}">Edit/Delete</a>)
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'create_job' staff.id %}">Add Job</a>
+    <!-- Page Heading -->
+    <h2 class="text-white">Staff Profile</h2>
 
+    <div class="row">
+        <!-- Staff Details Card -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning">
+                    Staff Details
+                </div>
+                <div class="card-body">
+                    <p><strong>First Name:</strong> {{ staff.first_name }}</p>
+                    <p><strong>Last Name:</strong> {{ staff.last_name }}</p>
+                    <p><strong>Client:</strong> {{ staff.client.company_name }}</p>
 
-    <h3>Qualifications</h3>
-    {% if staff.jobs.exists %}
-        <ul>
-            {% for job in staff.jobs.all %}
-                {% for qualification in job.qualifications.all %}
-                    <li>
-                        {{ qualification.name }} ({{ job.get_role_display }}) -
-                        <a href="{% url 'edit_or_delete_qualification' qualification.id %}">Edit/Delete</a>
-                    </li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No qualifications available for this staff member.</p>
-    {% endif %}
-    <a href="{% url 'create_qualification' staff.id %}">Add Qualification</a>
-    
+                    <h4>Jobs</h4>
+                    <ul class="list-unstyled">
+                        {% for job in staff.jobs.all %}
+                            <li>
+                                {{ job.get_role_display }}
+                                {% if user.is_superuser %}
+                                (<a href="{% url 'edit_or_delete_job' job.id %}" class="text-white">Edit/Delete</a>)
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'create_job' staff.id %}" class="btn btn-primary btn-sm">Add Job</a>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    {% if user.is_superuser %}
+                    <a href="{% url 'edit_or_delete_staff' staff.id %}" class="btn btn-warning btn-sm">Edit/Delete Staff Member</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-    
+        <!-- Qualifications Card -->
+        <div class="col-md-8">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning">
+                    Qualifications
+                </div>
+                <div class="card-body">
+                    {% if staff.jobs.exists %}
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Qualification</th>
+                                    <th>Role</th>
+                                    <th>Pass Date</th>
+                                    <th>Expiry Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in staff.jobs.all %}
+                                    {% for qualification in job.qualifications.all %}
+                                        <tr>
+                                            <td>{{ qualification.name }}</td>
+                                            <td>{{ job.get_role_display }}</td>
+                                            <td>{{ qualification.passed_date }}</td>
+                                            <td>{{ qualification.expiry_date }}</td>
+                                            <td>
+                                                {% if user.is_superuser %}
+                                                <a href="{% url 'edit_or_delete_qualification' qualification.id %}" class="btn btn-sm btn-warning">
+                                                    Edit/Delete
+                                                </a>
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No qualifications available for this staff member.</p>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                    <a href="{% url 'create_qualification' staff.id %}" class="btn btn-primary">Add Qualification</a>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'client_detail' staff.client.id %}" class="btn btn-secondary">Back to {{ staff.client.company_name }} Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{% url 'edit_or_delete_staff' staff.id %}">Edit/Delete Staff Member</a>
-    <a href="{% url 'client_detail' staff.client.id %}">Back to {{ staff.client.company_name }} Details</a>
+</div>
 
 
 
