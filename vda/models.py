@@ -14,7 +14,7 @@ class Client(models.Model):
     def __str__(self):
         return self.company_name
 
-User.add_to_class('client', models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=False))
+# User.add_to_class('client', models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=False))
 
 class Staff(models.Model):
     first_name = models.CharField(max_length=100)
