@@ -1,15 +1,3 @@
-body {
-  font-family: 'Noto Sans', sans-serif;
-  background-image: url('/static/img/arc/background4.jpg'); /* Adjust path if necessary */
-  min-height: 100vh;
-  position: relative;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  color: var(--txt-headline);
-}
-
 
 :root {
   --bkg-clr-main: #000000;
