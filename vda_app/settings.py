@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vda.apps.VdaConfig'
+    'vda.apps.VdaConfig',
+    'arc.apps.ArcConfig'
 ]
 
 MIDDLEWARE = [

@@ -155,3 +155,8 @@ body {
     background-color: #fff;
     border: 1px solid rgba(145, 149, 153, 0.7);
 }
+
+.return_link {
+    color: yellow;
+    /* text-decoration: none; */
+}

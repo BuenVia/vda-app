@@ -11,8 +11,8 @@ from .models import Client, Staff, Job, Qualification, ToolEquipment, Calibratio
 from .enums import DocumentCategory
 
 
-def index(request):
-    return render(request, 'index.html')
+# def index(request):
+#     return render(request, 'index.html')
 
 def user_login(request):
     if request.method == 'POST':
