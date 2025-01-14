@@ -19,7 +19,7 @@ User.add_to_class('client', models.ForeignKey(Client, on_delete=models.CASCADE, 
 class Staff(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='staff')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='staff', null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
