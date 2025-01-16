@@ -24,11 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-gqv*0frgcxr0l8e3l2-ltu0ummvx*n(_a2(p&y0cb58k7)8+&5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ['vda-caj9.onrender.com']
+# DEBUG = True
+# ALLOWED_HOSTS = []
 
-# DEBUG = False  # Ensure DEBUG is set to False in production
-# ALLOWED_HOSTS = ['*']  # Replace '*' with your domain(s) in production
+DEBUG = False  # Ensure DEBUG is set to False in production
+ALLOWED_HOSTS = ['*']  # Replace '*' with your domain(s) in production
 
 
 # Application definition
@@ -135,12 +135,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
-# if not DEBUG:
+if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = ''
+MEDIA_ROOT = BASE_DIR
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
