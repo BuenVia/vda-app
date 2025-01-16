@@ -141,10 +141,13 @@ if not DEBUG:
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    WHITENOISE_USE_FINDERS = True
+    
+    MEDIA_URL = ''
+    MEDIA_ROOT = os.path.join(BASE_DIR)
 
 MEDIA_URL = ''
 MEDIA_ROOT = BASE_DIR
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
