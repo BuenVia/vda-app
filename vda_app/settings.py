@@ -123,6 +123,7 @@ STATIC_URL = '/staticfiles/'
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
+    STATIC_URL = "/home/buenvia/vda-app/staticfiles"
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
@@ -144,3 +145,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'  # Redirects unauthenticated users to login
 LOGIN_REDIRECT_URL = 'dashboard'  # Redirect after successful login
 LOGOUT_REDIRECT_URL = 'login'  # Redirect after logout
+
