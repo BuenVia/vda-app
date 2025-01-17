@@ -23,11 +23,12 @@ body {
   background-size: cover;
   background-attachment: fixed;
   color: var(--txt-headline);
+  overflow: hidden;
 }
 @media screen and (min-width: 1000px) {
   body {
     background-image: url('/static/img/arc/background4.jpg'); /* Adjust path if necessary */
-      background-size: 100%;
+      /* background-size: 100%; */
       background-repeat: no-repeat;
   }
 }
