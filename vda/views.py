@@ -117,11 +117,11 @@ def create_user(request):
 def client_detail(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     users = client.user_set.all()  # Retrieve associated users
-    jobs = client.jobs.all().select_related('staff')  # Retrieve associated jobs with staff
-    if len(jobs) < 1:
-        staff_members = Staff.objects.filter(client_id=client_id).all()
-    else:
-        staff_members = {job.staff for job in jobs}  # Get unique staff members from jobs
+    # jobs = client.jobs.all().select_related('staff')  # Retrieve associated jobs with staff
+    # if len(jobs) < 1:
+    staff_members = Staff.objects.filter(client_id=client_id).all()
+    # else:
+    #     staff_members = {job.staff for job in jobs}  # Get unique staff members from jobs
     tools_equipment = client.tools_equipment.all()  # Retrieve tools and equipment
     documents = Document.objects.filter(client=client)
     document_status = {category.name: None for category in DocumentCategory}
