@@ -91,10 +91,19 @@ body {
     border: 1px solid rgba(145, 149, 153, 0.7);
 }
 
-.client__login__message {
+.client__login__error {
     width: fit-content;
     padding: .5em;
     background-color: #c23d3d;
+    color: #eee;
+    list-style: none;
+    border-radius: 5px;
+}
+
+.client__login__success {
+    width: fit-content;
+    padding: .5em;
+    background-color: #0aac22;
     color: #eee;
     list-style: none;
     border-radius: 5px;

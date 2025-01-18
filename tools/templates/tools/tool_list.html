@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h2 class="text-center text-white mb-4">Tools and Equipment for {{ client.company_name }}</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if tools %}
+                <!-- Tools and Equipment Table -->
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Make</th>
+                                <th>Model</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tool in tools %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ tool.make }}</td>
+                                    <td>{{ tool.model }}</td>
+                                    <td>{{ tool.description|truncatechars:50 }}</td>
+                                    <td>
+                                        <a href="{% url 'equipment_detail' tool.id %}" class="btn btn-primary btn-sm">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <!-- No Tools Message -->
+                <p class="text-center text-warning">No tools or equipment are associated with this client.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Back to Client Details Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'client_detail' client.id %}" class="btn btn-secondary">Back to Client Details</a>
+    </div>
+</div>
+
+
+{% endblock %}

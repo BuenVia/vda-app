@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Documents for {{ client.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h2 class="text-center text-white mb-4">Documents for {{ client.company_name }}</h2>
+
+    <!-- Documents Table -->
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Document</th>
+                    <th>Status</th>
+                    <th>Upload Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category, document in document_status.items %}
+                    <tr>
+                        <td>{{ category|capfirst }}</td>
+                        {% if document %}
+                            <td>Uploaded</td>
+                            <td>{{ document.upload_date }}</td>
+                        {% else %}
+                            <td>
+                                <a href="{% url 'upload_document' client.id category %}" class="btn btn-primary btn-sm">
+                                    Upload
+                                </a>
+                            </td>
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back to Client Details Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'client_detail' client.id %}" class="btn btn-secondary">Back to Client Details</a>
+    </div>
+</div>
+
+{% endblock %}

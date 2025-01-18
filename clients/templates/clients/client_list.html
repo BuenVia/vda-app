@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Client List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h2 class="text-white">Client List</h2>
+    <a href="{% url 'create_client' %}" class="btn btn-warning">Add Client</a>
+
+    {% if clients %}
+        <!-- Clients Table -->
+        <div class="table-responsive my-4">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Client Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'client_detail' client.id %}" class="text-white">
+                                    {{ client.company_name }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'client_detail' client.id %}" class="btn btn-primary btn-sm">View Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <!-- No Clients Message -->
+        <p class="text-center text-warning">No clients have been created yet.</p>
+    {% endif %}
+
+    <!-- Back to Dashboard Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+{% endblock %}

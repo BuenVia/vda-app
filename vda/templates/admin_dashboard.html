@@ -7,9 +7,12 @@
 <div class="container mt-5">
 
     <!-- Centered Title -->
-    <h2 class="text-center text-white">Welcome to the Dashboard</h2>
+    <h2 class="text-center text-white">Admin Dashboard</h2>
 
     <div class="row justify-content-center mt-4">
+        
+
+
         <!-- Card for Clients and Staff -->
         <div class="col-md-6">
             <div class="card bg-dark text-white my-4">
@@ -17,24 +20,71 @@
                     System Overview
                 </div>
                 <div class="card-body">
-                    <p><strong>Total Clients:</strong> {{ total_clients }}</p>
-                    <p><strong>Staff Per Client:</strong></p>
-                    <ul class="list-unstyled">
-                        {% for client in clients %}
-                            <li>{{ client.company_name }}: {{ client.staff_count }} staff</li>
+                    <p class="">Version: {{ APP_VERSION }}</p>
+                    <p><strong>Total Clients:</strong> {{ clients | length }}</p>
+                    <p><strong>Total Users:</strong> {{ users | length }}</p>
+                    <p><strong>Total Staff:</strong> {{ staff | length }}</p>
+                    <p><strong>Total Equipment:</strong> {{ tools | length }}</p>
+                    <p><strong>System Messages:</strong></p>
+                    {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            {% if 'login_error' not in message.tags %}
+                                <p class="client__login__message">{{ message }}</p>
+                            {% endif %}
                         {% endfor %}
                     </ul>
+                {% endif %}
+
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'user_list' %}" class="btn btn-primary btn-block">View All Users</a>        
                 </div>
             </div>
         </div>
+
+
+        <div class="col-md-6">
+            <div class="card bg-dark text-white my-4">
+                <div class="card-header text-warning text-center">
+                    Client List
+                </div>
+                <div class="card-body">
+                    
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Client Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'client_detail' client.id %}" class="text-white">
+                                            {{ client.company_name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'client_detail' client.id %}" class="btn btn-primary btn-sm">View Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'client_list' %}" class="btn btn-primary btn-block">View All Clients</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Manage Users Section -->
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <a href="{% url 'user_list' %}" class="btn btn-primary btn-block">Manage Users</a>
-        </div>
-    </div>
+
 
 </div>
 

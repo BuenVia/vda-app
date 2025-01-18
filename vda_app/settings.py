@@ -23,8 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-gqv*0frgcxr0l8e3l2-ltu0ummvx*n(_a2(p&y0cb58k7)8+&5'
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+VERSION = "1.2.0"
 ALLOWED_HOSTS = ["*"]
+
 
 # Application definition
 
@@ -36,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vda.apps.VdaConfig',
-    'arc.apps.ArcConfig'
+    'arc.apps.ArcConfig',
+    'staff.apps.StaffConfig',
+    'tools.apps.ToolsConfig',
+    'clients.apps.ClientsConfig',
+    'documents.apps.DocumentsConfig'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'vda.middleware.AutoLogoutMiddleware',
 ]
 
 ROOT_URLCONF = 'vda_app.urls'
@@ -62,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Add your custom context processor
+                "vda.context_processors.version_context",
             ],
         },
     },
@@ -145,3 +154,7 @@ LOGIN_URL = 'login'  # Redirects unauthenticated users to login
 LOGIN_REDIRECT_URL = 'dashboard'  # Redirect after successful login
 LOGOUT_REDIRECT_URL = 'login'  # Redirect after logout
 
+
+# Set session timeout to 10 minutes (600 seconds)
+SESSION_COOKIE_AGE = 600  # Time in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Optional: Ends session when browser is closed

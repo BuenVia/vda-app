@@ -14,7 +14,8 @@
         <div class="client__login__card">
 
             <div class="client__login__card__top">
-                <h1>ARC Support Services</h1>
+                <h1>EVOLVE</h1>
+                <p style="font-size: 10px">by ARC Support Services</p>
             </div>
 
             <div class="client__login__card__mid">
@@ -28,13 +29,15 @@
                     <input type="password" id="password" name="password" placeholder="Password" required>
                     
                     {% if messages %}
-                    
-                    <ul>
-                        {% for message in messages %}
-                        <li class="client__login__message">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    
+                        <ul>
+                            {% for message in messages %}
+                                {% if 'login_error' in message.tags %}
+                                    <li class="client__login__error">{{ message }}</li>
+                                {% elif 'login_success' not in message.tags %}
+                                    <p class="client__logout__success">{{ message }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                     
                     <button type="submit">Login</button>
@@ -44,6 +47,7 @@
             </div>
             
             <div class="client__login__card__btm">
+                <p class="text-muted">Version: {{ APP_VERSION }}</p>
                 &#169; <span id="date"></span> ARC Support Services | All rights reserved
             </div>
             

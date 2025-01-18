@@ -25,8 +25,7 @@
                   </li>
                   {% if request.user.is_superuser %}
                   <li><a class="nav-link" href="{% url 'client_list' %}">Client List</a></li>
-                  <li><a class="nav-link" href="{% url 'create_client' %}">Create Client</a></li>
-                  <li><a class="nav-link" href="{% url 'create_user' %}">Create User</a></li>
+                  <li><a class="nav-link" href="{% url 'user_list' %}">Manage Users</a></li>
                 {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -45,6 +44,7 @@
     </main>
 
     <footer class="footer">
+      <p class="">Version: {{ APP_VERSION }}</p>
       <span>All rights reserved &#169 ARC Support Services</span>
       <span> | </span>
       <span class="">Powered by <a href="https://mjclifford.com" target="_blank">MJClifford.com</a></span>
