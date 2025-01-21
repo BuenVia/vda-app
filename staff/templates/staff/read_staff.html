@@ -43,58 +43,18 @@
             </div>
         </div>
 
-        <!-- Qualifications Card -->
-        <div class="col-md-8">
-            <div class="card bg-dark text-white my-4">
-                <div class="card-header text-warning">
-                    Qualifications
-                </div>
-                <div class="card-body">
-                    {% if staff.jobs.exists %}
-                        <table class="table table-dark table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Qualification</th>
-                                    <th>Role</th>
-                                    <th>Pass Date</th>
-                                    <th>Expiry Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for job in staff.jobs.all %}
-                                    {% for qualification in job.qualifications.all %}
-                                        <tr>
-                                            <td>{{ qualification.name }}</td>
-                                            <td>{{ job.get_role_display }}</td>
-                                            <td>{{ qualification.passed_date }}</td>
-                                            <td>{{ qualification.expiry_date }}</td>
-                                            <td>
-                                                {% if user.is_superuser %}
-                                                <a href="{% url 'edit_or_delete_qualification' qualification.id %}" class="btn btn-sm btn-warning">
-                                                    Edit/Delete
-                                                </a>
-                                                {% else %}
-                                                    N/A
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No qualifications available for this staff member.</p>
-                    {% endif %}
-                    {% if user.is_superuser %}
-                    <a href="{% url 'create_qualification' staff.id %}" class="btn btn-primary">Add Qualification</a>
-                    {% endif %}
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'client_detail' staff.client.id %}" class="btn btn-secondary">Back to {{ staff.client.company_name }} Details</a>
-                </div>
-            </div>
-        </div>
+
+<!-- Qualifications Cards -->
+<div class="col-md-8">
+    
+    <p>Amend job creation code to create qualification entities in the db for the user, which then are displayed here.</p>
+
+    <div class="text-center my-4">
+        <a href="{% url 'client_detail' staff.client.id %}" class="btn btn-secondary">Back to {{ staff.client.company_name }} Details</a>
+    </div>
+</div>
+
+
     </div>
 
 </div>

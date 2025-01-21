@@ -45,7 +45,17 @@ def create_staff(request, client_id):
 @login_required
 def read_staff(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
-    return render(request, 'staff/read_staff.html', {'staff': staff})
+    jobs = Job.objects.filter(staff_id=staff.id)
+    qualification_obj = {
+        "VDA": ["VDA Qual", "Audatex"],
+        "PNL": ["PNL Qual", "GEOM AOM220", "ADAS AOM230", "Glazing", "F Gas", "Hybrid", "HEV Aware"],
+        "MET": ["MET Qual", "1140 Spot", "4872 MIG", "Braze", "Boron", "AOM009", "St Bond", "Rivet", "AOM030", "AOM028", "AOM032"],
+        "PNT": ["PNT Qual"],
+    }
+    job_list = []
+    for job in jobs:
+        job_list.append(qualification_obj[job.role])
+    return render(request, 'staff/read_staff.html', {'staff': staff, 'job_list': job_list})
 
 @user_passes_test(is_admin)
 def edit_or_delete_staff(request, staff_id):
