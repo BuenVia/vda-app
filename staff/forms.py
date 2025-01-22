@@ -1,6 +1,6 @@
 from django import forms
 from .enums import JobRole
-from .models import Staff, Job, Qualification
+from .models import Staff, StaffJob, StaffQualification
 
 class StaffForm(forms.ModelForm):
     class Meta:
@@ -11,7 +11,7 @@ class StaffForm(forms.ModelForm):
 
 class JobForm(forms.ModelForm):
     class Meta:
-        model = Job
+        model = StaffJob
         fields = ['role']
         widgets = {
             'role': forms.Select(choices=[(role.name, role.value) for role in JobRole])
@@ -20,7 +20,7 @@ class JobForm(forms.ModelForm):
 
 class QualificationForm(forms.ModelForm):
     class Meta:
-        model = Qualification
+        model = StaffQualification
         fields = ['job', 'name', 'passed_date', 'expiry_date']
         widgets = {
             'passed_date': forms.DateInput(attrs={'type': 'date'}),

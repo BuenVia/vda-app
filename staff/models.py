@@ -12,7 +12,7 @@ class Staff(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Job(models.Model):
+class StaffJob(models.Model):
     staff = models.ForeignKey('Staff', on_delete=models.CASCADE, related_name='jobs')
     client = models.ForeignKey('clients.Client', on_delete=models.CASCADE, related_name='jobs')
     role = models.CharField(
@@ -23,11 +23,28 @@ class Job(models.Model):
     def __str__(self):
         return f"{self.role} - {self.staff.first_name} {self.staff.last_name} ({self.client.company_name})"
 
-class Qualification(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='qualifications')
+class StaffQualification(models.Model):
+    job = models.ForeignKey(StaffJob, on_delete=models.CASCADE, related_name='qualifications')
     name = models.CharField(max_length=255)
     passed_date = models.DateField()
     expiry_date = models.DateField()
 
     def __str__(self):
         return f"{self.name} ({self.job.role}) - {self.job.staff.first_name} {self.job.staff.last_name}"
+    
+    
+
+# Table for jobTypes
+class JobTypes(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name}"
+
+# Table for qualificationTypes
+class QualificationType(models.Model):
+    name = models.CharField(max_length=255)
+    jobtype = models.ForeignKey(JobTypes, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.jobtype.name}: {self.name}"

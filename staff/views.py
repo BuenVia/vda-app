@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from .forms import StaffForm, JobForm, QualificationForm
-from .models import Staff, Job, Qualification
+from .models import Staff, StaffQualification, StaffJob
 from clients.models import Client
 from vda.views import is_admin
 
@@ -45,7 +45,7 @@ def create_staff(request, client_id):
 @login_required
 def read_staff(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
-    jobs = Job.objects.filter(staff_id=staff.id)
+    jobs = StaffJob.objects.filter(staff_id=staff.id)
     qualification_obj = {
         "VDA": ["VDA Qual", "Audatex"],
         "PNL": ["PNL Qual", "GEOM AOM220", "ADAS AOM230", "Glazing", "F Gas", "Hybrid", "HEV Aware"],
@@ -102,7 +102,7 @@ def create_job(request, staff_id):
 @login_required
 @user_passes_test(is_admin)
 def edit_or_delete_job(request, job_id):
-    job = get_object_or_404(Job, id=job_id)
+    job = get_object_or_404(StaffJob, id=job_id)
     staff = job.staff
     if request.method == 'POST':
         if 'update' in request.POST:
@@ -144,7 +144,7 @@ def create_qualification(request, staff_id):
 @login_required
 @user_passes_test(is_admin)
 def edit_or_delete_qualification(request, qualification_id):
-    qualification = get_object_or_404(Qualification, id=qualification_id)
+    qualification = get_object_or_404(StaffQualification, id=qualification_id)
     staff = qualification.job.staff
     if request.method == 'POST':
         if 'update' in request.POST:
@@ -168,7 +168,7 @@ def edit_or_delete_qualification(request, qualification_id):
 @login_required
 def competency(request, client_id):
     client = get_object_or_404(Client, id=client_id)
-    qualifications = Qualification.objects.filter(job__staff__client=client).select_related('job', 'job__staff')
+    qualifications = StaffQualification.objects.filter(job__staff__client=client).select_related('job', 'job__staff')
 
     return render(
         request,
