@@ -1,6 +1,5 @@
 from django import forms
-from .enums import JobRole
-from .models import Staff, StaffJob, StaffQualification
+from .models import Staff, StaffJob, StaffQualification, JobTypes
 
 class StaffForm(forms.ModelForm):
     class Meta:
@@ -10,12 +9,15 @@ class StaffForm(forms.ModelForm):
 
 
 class JobForm(forms.ModelForm):
+    job = forms.ModelChoiceField(
+        queryset=JobTypes.objects.all(),
+        empty_label="Select Job Type",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = StaffJob
-        fields = ['role']
-        widgets = {
-            'role': forms.Select(choices=[(role.name, role.value) for role in JobRole])
-        }
+        fields = ['job']
 
 
 class QualificationForm(forms.ModelForm):

@@ -24,12 +24,13 @@
                     <ul class="list-unstyled">
                         {% for job in staff.jobs.all %}
                             <li>
-                                {{ job.get_role_display }}
+                                {{ job.job.name }}  <!-- Access the name attribute of the JobType model -->
                                 {% if user.is_superuser %}
                                 (<a href="{% url 'edit_or_delete_job' job.id %}" class="text-white">Edit/Delete</a>)
                                 {% endif %}
                             </li>
                         {% endfor %}
+
                     </ul>
                     {% if user.is_superuser %}
                     <a href="{% url 'create_job' staff.id %}" class="btn btn-primary btn-sm">Add Job</a>

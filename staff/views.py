@@ -46,16 +46,25 @@ def create_staff(request, client_id):
 def read_staff(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
     jobs = StaffJob.objects.filter(staff_id=staff.id)
+
+    # Mapping JobType names to their respective qualifications
     qualification_obj = {
         "VDA": ["VDA Qual", "Audatex"],
         "PNL": ["PNL Qual", "GEOM AOM220", "ADAS AOM230", "Glazing", "F Gas", "Hybrid", "HEV Aware"],
         "MET": ["MET Qual", "1140 Spot", "4872 MIG", "Braze", "Boron", "AOM009", "St Bond", "Rivet", "AOM030", "AOM028", "AOM032"],
         "PNT": ["PNT Qual"],
     }
+
     job_list = []
     for job in jobs:
-        job_list.append(qualification_obj[job.role])
+        job_name = job.job.name  # Access JobType name
+        if job_name in qualification_obj:
+            job_list.append(qualification_obj[job_name])  # Retrieve relevant qualifications
+        else:
+            job_list.append([])  # Default to an empty list if no qualifications are found
+
     return render(request, 'staff/read_staff.html', {'staff': staff, 'job_list': job_list})
+
 
 @user_passes_test(is_admin)
 def edit_or_delete_staff(request, staff_id):
@@ -83,6 +92,7 @@ def edit_or_delete_staff(request, staff_id):
 def create_job(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
     client = staff.client  # Derive the client from the staff member
+
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
@@ -90,7 +100,7 @@ def create_job(request, staff_id):
             job.staff = staff
             job.client = client
             job.save()
-            messages.success(request, f"Job {job.role} added for {staff.first_name} {staff.last_name}!")
+            messages.success(request, f"Job {job.job.name} added for {staff.first_name} {staff.last_name}!")
             return redirect('read_staff', staff_id=staff.id)
         else:
             messages.error(request, "Error adding job. Please try again.")
@@ -179,3 +189,17 @@ def competency(request, client_id):
         }
     )
 
+
+
+"""
+1. Create staff member
+2. Assign a job to a staff member. The jobs are selected from VDA, MET, PNT and PNL.
+3. When job is assigned, this automatically assigns qualifications to the staff member.
+The qualifications are predefined for each job, so we need to:
+
+- Table for each job type
+- Table for each qualification type
+- Table for staff member
+- Table for staff job
+- Table for staff qualification - autopopulated on job creation.
+"""
