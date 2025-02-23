@@ -40,6 +40,7 @@ class StaffJob(models.Model):
 
 class StaffQualification(models.Model):
     job = models.ForeignKey(StaffJob, on_delete=models.CASCADE, related_name='qualifications')
+    qualification = models.ForeignKey(QualificationType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     passed_date = models.DateField()
     expiry_date = models.DateField()

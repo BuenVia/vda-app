@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from .forms import StaffForm, JobForm, QualificationForm
-from .models import Staff, StaffQualification, StaffJob
+from .models import Staff, StaffQualification, StaffJob, QualificationType
 from clients.models import Client
 from vda.views import is_admin
-
+from datetime import timedelta, date
 
 # STAFF
 @login_required
@@ -45,25 +45,19 @@ def create_staff(request, client_id):
 @login_required
 def read_staff(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
-    jobs = StaffJob.objects.filter(staff_id=staff.id)
+    jobs = StaffJob.objects.filter(staff=staff).prefetch_related('qualifications')
 
-    # Mapping JobType names to their respective qualifications
-    qualification_obj = {
-        "VDA": ["VDA Qual", "Audatex"],
-        "PNL": ["PNL Qual", "GEOM AOM220", "ADAS AOM230", "Glazing", "F Gas", "Hybrid", "HEV Aware"],
-        "MET": ["MET Qual", "1140 Spot", "4872 MIG", "Braze", "Boron", "AOM009", "St Bond", "Rivet", "AOM030", "AOM028", "AOM032"],
-        "PNT": ["PNT Qual"],
-    }
-
+    # Structure data to include job details and related qualifications
     job_list = []
     for job in jobs:
-        job_name = job.job.name  # Access JobType name
-        if job_name in qualification_obj:
-            job_list.append(qualification_obj[job_name])  # Retrieve relevant qualifications
-        else:
-            job_list.append([])  # Default to an empty list if no qualifications are found
+        qualifications = StaffQualification.objects.filter(job=job)
+        job_list.append({
+            'job': job,
+            'qualifications': qualifications
+        })
 
     return render(request, 'staff/read_staff.html', {'staff': staff, 'job_list': job_list})
+
 
 
 @user_passes_test(is_admin)
@@ -100,7 +94,19 @@ def create_job(request, staff_id):
             job.staff = staff
             job.client = client
             job.save()
-            messages.success(request, f"Job {job.job.name} added for {staff.first_name} {staff.last_name}!")
+
+            # Automatically populate StaffQualification table with relevant qualifications
+            related_qualifications = QualificationType.objects.filter(jobtype=job.job_id)
+            for qualification in related_qualifications:
+                StaffQualification.objects.create(
+                    job=job,
+                    qualification=qualification,
+                    name=qualification.name,
+                    passed_date=date.today(),  # Default to today
+                    expiry_date=date.today() + timedelta(days=365 * 3)  # Example: 3-year expiry
+                )
+
+            messages.success(request, f"Job {job.job.name} added for {staff.first_name} {staff.last_name}, and relevant qualifications assigned!")
             return redirect('read_staff', staff_id=staff.id)
         else:
             messages.error(request, "Error adding job. Please try again.")
