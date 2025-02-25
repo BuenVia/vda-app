@@ -71,7 +71,7 @@ def client_detail(request, client_id):
 
         for doc in documents:
             document_status[doc.category] = doc
-
+            
         return render(
             request,
             'clients/client_detail.html',

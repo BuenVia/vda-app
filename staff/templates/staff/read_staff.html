@@ -41,6 +41,9 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="text-center my-4">
+                <a href="{% url 'client_detail' staff.client.id %}" class="btn btn-secondary">Back to {{ staff.client.company_name }} Details</a>
+            </div>
         </div>
 
         <!-- Qualifications Card -->
@@ -72,9 +75,6 @@
                 </div>
             </div>
 
-            <div class="text-center my-4">
-                <a href="{% url 'client_detail' staff.client.id %}" class="btn btn-secondary">Back to {{ staff.client.company_name }} Details</a>
-            </div>
         </div>
     </div>
 </div>

@@ -42,8 +42,8 @@ class StaffQualification(models.Model):
     job = models.ForeignKey(StaffJob, on_delete=models.CASCADE, related_name='qualifications')
     qualification = models.ForeignKey(QualificationType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    passed_date = models.DateField()
-    expiry_date = models.DateField()
+    passed_date = models.DateField(blank=True, null=True)
+    expiry_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.job.role}) - {self.job.staff.first_name} {self.job.staff.last_name}"
